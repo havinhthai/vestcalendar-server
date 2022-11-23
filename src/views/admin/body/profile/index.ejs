@@ -1,0 +1,138 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Profile Management') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Profile Management</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Profile Management</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css')%>
+
+<% script('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js') -%>
+
+<div class="row">
+  <div class="col-md-3 col-xs-12">
+    <div class="card card-primary card-outline">
+      <div class="card-body box-profile">
+        <div class="text-center">
+          <img class="profile-user-img img-fluid img-circle picked__image--img" src="<%= administrator.avatar %>"
+            style="margin-bottom: 10px">
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal__images--management">
+            Choose image
+          </button>
+        </div>
+
+        <h3 class="profile-username text-center"><%= administrator.firstName + ' ' + administrator.lastName %></h3>
+
+        <p class="text-muted text-center"><%= administrator.role.name %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-9 col-xs-12">
+    <div class="card">
+      <div class="card-body">
+        <h3>Update information</h3>
+
+        <form action="/admin/profile" method="POST">
+          <input type="hidden" name="_method" value="PUT">
+
+          <input type="hidden" name="avatar" class="picked__image--input" value="<%= administrator.avatar %>">
+
+          <div class="form-group">
+            <label>Email</label>
+
+            <input class="form-control" disabled value="<%= administrator.email %>">
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-xs-12">
+              <div class="form-group">
+                <label>First name*</label>
+
+                <input class="form-control" name="firstName" value="<%= administrator.firstName %>" required>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-xs-12">
+              <div class="form-group">
+                <label>Last name*</label>
+
+                <input class="form-control" name="lastName" value="<%= administrator.lastName %>" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-primary">Update information</button>
+          </div>
+        </form>
+
+        <hr>
+
+        <form action="/admin/profile/change-password" method="POST" class="validatePasswordForm">
+          <input type="hidden" name="_method" value="PUT">
+
+          <div class="form-group">
+            <label>Current Password</label>
+
+            <input class="form-control" type="password" required name="currentPassword">
+          </div>
+
+          <div class="form-group">
+            <label>New Password</label>
+
+            <input class="txtPassword form-control" type="password" required name="newPassword">
+          </div>
+
+          <div class="form-group">
+            <label>Confirm Password</label>
+
+            <input class="txtConfirmPassword form-control" type="password" required name="confirmPassword">
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-primary">Change password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal__images--management" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Chọn hình ảnh</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% include ../../partial/images_management %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn-save-change" data-dismiss="modal">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

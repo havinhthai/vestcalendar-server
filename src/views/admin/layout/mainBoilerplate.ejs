@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title><%- block('title') %> | VestCalendar</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <%-stylesheets%>
+  <link rel="stylesheet" href="/public/admin/css/adminlte<% if (process.env.NODE_ENV === 'production') { %><%= '.min' %><% } %>.css">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700;subset=vietnamese" rel="stylesheet">
+</head>
+<body class="hold-transition sidebar-mini">
+  <div class="wrapper">
+    <% include ../partial/navbar %>
+
+    <% include ../partial/aside %>
+
+    <div class="content-wrapper">
+      <%-block('titleBar')%>
+
+      <div class="content">
+        <div class="container-fluid">
+          <% include ../partial/message %>
+
+          <%-body -%>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Axios -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/speakingurl/14.0.1/speakingurl.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <%-scripts%>
+  <script src="/public/admin/js/timezone.js"></script>
+  <script src="/public/admin/js/adminlte<% if (process.env.NODE_ENV === 'production') { %><%= '.min' %><% } %>.js"></script>
+  <script src="/public/admin/js/custom<% if (process.env.NODE_ENV === 'production') { %><%= '.min' %><% } %>.js"></script>
+
+</body>
+</html>

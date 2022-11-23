@@ -1,0 +1,201 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'User\'s Items Management') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">User's Items Management</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">User's Items Management</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <% if (query.q || query.role) { %>
+          <h5 class="d-inline-block">
+            Found <%= totalItems %> result(s)
+            <small><a href="/admin/items/by-user">Back</a></small>
+          </h5>
+        <% } %>
+
+        <div class="card-tools">
+          <form id="search-form">
+            <select name="category" class="form-control form-control-sm mr-1 pull-left"  style="width: auto;">
+              <option value="0" <%= query.rarity === '0' ? 'selected' : '' %>>All categories</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <%= query.category === category._id.toString() ? 'selected' : '' %>>
+                  <%= category.name %>
+                </option>
+              <% }); %>
+            </select>
+
+            <select name="rarity" class="form-control form-control-sm mr-1 pull-left"  style="width: auto;">
+              <option value="0" <%= query.rarity === '0' ? 'selected' : '' %>>All rarity</option>
+              <% rarities.forEach(rarity => { %>
+                <option value="<%= rarity._id %>" <%= query.rarity === rarity._id.toString() ? 'selected' : '' %>>
+                  <%= rarity.name %>
+                </option>
+              <% }); %>
+            </select>
+
+            <select name="status" class="form-control form-control-sm mr-1 pull-left"  style="width: auto;">
+              <option value="0" <%= query.status === '0' ? 'selected' : '' %>>All status</option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_PENDING %>" <% if (query.status === ITEM_STATUS.ITEM_STATUS_PENDING) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_PENDING %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_APPROVE %>" <% if (query.status === ITEM_STATUS.ITEM_STATUS_APPROVE) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_APPROVE %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_REJECT %>" <% if (query.status === ITEM_STATUS.ITEM_STATUS_REJECT) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_REJECT %>
+              </option>
+            </select>
+
+            <select name="isOnSale" class="form-control form-control-sm mr-1 pull-left"  style="width: auto;">
+              <option value="-1" <%= query.isOnSale === '-1' ? 'selected' : '' %>>All</option>
+              <option value="1" <%= query.isOnSale === '1' ? 'selected' : '' %>>On sale</option>
+              <option value="0" <%= query.isOnSale === '0' ? 'selected' : '' %>>Not for sale</option>
+            </select>
+
+            <select class="form-control form-control-sm mr-1 pull-left" name='sort' style="width: auto;">
+              <option value="1" <% if (query.sort === '1') { %>selected<% } %>>
+                Created At DESC</option>
+              <option value="2" <% if (query.sort === '2') { %>selected<% } %>>
+                Created At ASC</option>
+            </select>
+
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input
+                type="text"
+                name="q"
+                class="form-control float-right"
+                placeholder="Search"
+                value="<%= query.q ? query.q : '' %>"
+              >
+
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <% if (!query.q) { %>
+           <br>
+        <% } %>
+      </div>
+
+      <div class="card-body table-responsive p-0">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Asset Type</th>
+              <th class="text-center">Rarity</th>
+              <th class="text-center">On Sale</th>
+              <th>Image</th>
+              <th class="text-center">Status</th>
+              <th>Created By</th>
+              <th class="text-center">Created At</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% items.forEach((item, i) => { %>
+              <tr>
+                <td class="text-center align-middle">
+                  <%= countPerPage(i, currentPage) %>
+                </td>
+                <td class="align-middle">
+                  <a href="/admin/items/<%= item._id %>">
+                    <%= item.name %>
+                  </a>
+                </td>
+                <td class="align-middle">
+                  <% if (item.category) { %>
+                  <a href="/admin/categories/<%= item.category._id %>">
+                    <%= item.category.name %>
+                  </a>
+                  <% } %>
+                  </td>
+                <td class="align-middle">
+                  <% if (item.assetType) { %>
+                  <a href="/admin/asset-types/<%= item.assetType._id %>">
+                    <%= item.assetType.name %>
+                  </a>
+                  <% } %>
+                </td>
+                <td class="text-center align-middle">
+                  <% if (item.rarity) { %>
+                  <span class="badge" style="background-color: <%= item.rarity.color %>;">
+                    <a href="/admin/rarities/<%= item.rarity._id %>" style="color: #ffffff;">
+                      <%= item.rarity.name %>
+                    </a>
+                  </span>
+                  <% } %>
+                </td>
+                <td class="text-center align-middle" width="150">
+                  <% if (item.isOnSale) { %>
+                    <i class="fa fa-check nav-icon"></i>
+                  <% } %>
+                </td>
+                <td class="align-middle" width="150">
+                  <img src="<%= item.image %>" class="img-fluid">
+                </td>
+                <td class="text-center align-middle">
+                  <% if (item.status === ITEM_STATUS.ITEM_STATUS_PENDING) { %>
+                  <span class="badge bg-info">
+                    <% } else if (item.status === ITEM_STATUS.ITEM_STATUS_APPROVE) { %>
+                  <span class="badge bg-success">
+                    <% } else if (item.status === ITEM_STATUS.ITEM_STATUS_REJECT) { %>
+                  <span class="badge bg-danger">
+                    <% } %>
+                    <%= item.status %>
+                  </span>
+                </td>
+                <td class="align-middle">
+                  <% if (item.createByUser) { %>
+                  <a href="/admin/users/<%= item.createByUser._id %>">
+                    (USER) <%= item.createByUser.username %>
+                  </a>
+                  <% } %>
+                </td>
+                <td class="text-center align-middle"><%= formatDate(item.createdAt) %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <% if (query.q || query.role) { %>
+          <h5 class="float-left">
+            Found <%= totalItems %> result(s)
+            <small><a href="/admin/items/by-user">Back</a></small>
+          </h5>
+        <% } %>
+
+        <% include ../../partial/pagination %>
+      </div>
+    </div>
+  </div>
+</div>

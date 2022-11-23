@@ -1,0 +1,71 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Add Role') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Add Role</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/admin/roles">Roles Management</a>
+            </li>
+            <li class="breadcrumb-item active">Add Role</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<form method="POST" id="main_form">
+  <div class="row">
+    <div class="col-md-12 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Name*</label>
+            <input name="name" class="form-control slug-ref" placeholder="Enter name" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" placeholder="Enter description"></textarea>
+          </div>
+
+          <div class="row">
+          <% permissionGroups.forEach(pg => { %>
+            <div class="form-group col-md-4">
+              <label>
+                <%= pg.groupName %>
+              </label>
+              <br>
+              <% pg.permissions.forEach(p => { %>
+              <div class="form-check
+                <% if (p.name.indexOf('_YOURSELF') !== -1) { %>checkboxShowNext<% } %>">
+                <input type="checkbox" name="permissions" class="form-check-input dynamic-disable" id="<%= p.name %>"
+                  value="<%= p.name %>">
+                <label class="form-check-label" for="<%= p.name %>">
+                  <%= p.name %>
+                </label>
+              </div>
+              <% }); %>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <div class="card-footer clearfix">
+          <button class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

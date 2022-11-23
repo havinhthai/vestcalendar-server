@@ -1,0 +1,299 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Edit Item') %>
+
+<% if (item.createByUser) { %>
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Edit Item</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/admin/items/by-user">User's Items Management</a>
+            </li>
+            <li class="breadcrumb-item active">Edit Item</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+<% } else { %>
+<% block('titleBar', `
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Edit Item</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item">
+            <a href="/admin">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a href="/admin/items">Items Management</a>
+          </li>
+          <li class="breadcrumb-item active">Edit Item</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+`) -%>
+<% } %>
+
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css')%>
+
+<% script('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js') -%>
+
+<form method="POST" id="main_form" class="item-form">
+  <input type="hidden" name="_method" value="PUT">
+  <div class="row">
+    <div class="col-md-8 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Name*</label>
+            <input name="name" class="form-control slug-ref" placeholder="Enter item's name" value="<%= item.name %>" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="lb-edit">Slug*</label>
+            <input name="slug" class="form-control mask-slug" placeholder="Enter item's slug" value="<%= item.slug %>" readonly required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Enter item's description"><%= item.description || '' %></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category" class="form-control select2">
+              <option value="">--- Select category ---</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>" <% if (item.category && item.category.toString() === category._id.toString()) { %>selected<% } %>>
+                  <%= category.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Asset Type</label>
+            <select name="assetType" class="form-control select2">
+              <option value="">--- Select asset type ---</option>
+              <% assetTypes.forEach(assetType => { %>
+                <option value="<%= assetType._id %>" <% if (item.assetType && item.assetType.toString() === assetType._id.toString()) { %>selected<% } %>>
+                  <%= assetType.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Rarity</label>
+            <select name="rarity" class="form-control select2">
+              <option value="">--- Select rarity ---</option>
+              <% rarities.forEach(rarity => { %>
+                <option value="<%= rarity._id %>" <% if (item.rarity && item.rarity.toString() === rarity._id.toString()) { %>selected<% } %>>
+                  <%= rarity.name %> (level <%= rarity.level %>)
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="lb-edit">Attribute</label>
+            <input name="attribute" class="form-control" value="<%= item.attribute %>" placeholder="Enter item's attribute">
+          </div>
+
+          <div class="form-group">
+            <label>Quantity</label>
+            <input name="quantity" type="number" min="0" value="<%= item.quantity %>" class="form-control" placeholder="Enter item's quantity">
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input name="price" type="number" min="0" value="<%= item.price %>" class="form-control" placeholder="Enter item's price">
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control select2" data-minimum-results-for-search="Infinity" <% if (item.status === ITEM_STATUS.ITEM_STATUS_APPROVE) { %>disabled<% } %>>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_PENDING %>" <% if (item.status === ITEM_STATUS.ITEM_STATUS_PENDING) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_PENDING %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_APPROVE %>" <% if (item.status === ITEM_STATUS.ITEM_STATUS_APPROVE) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_APPROVE %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_REJECT %>" <% if (item.status === ITEM_STATUS.ITEM_STATUS_REJECT) { %>selected<% } %>>
+                <%= ITEM_STATUS.ITEM_STATUS_REJECT %>
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Is on sale: </label>
+            <label class="switch">
+              <input type="checkbox" name="isOnSale" value="true" <% if (item.isOnSale) { %>checked<% } %>>
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="card-footer clearfix">
+            <button class="btn btn-primary">Save</button>
+            <button class="btn pull-right btn-req-delete btn-danger"
+            data-url="/admin/items/<%= item._id %>"
+            <% if (item.createByUser) { %>
+              data-href-redirect="/admin/items/by-user"
+            <% } else { %>
+              data-href-redirect="/admin/items"
+            <% } %>
+            data-type="Item"
+            type="button">Delete</button>
+          </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-4 col-xs-12">
+      <% if (item.createByAdmin) { %>
+      <div class="card">
+        <div class="card-header text-center">
+          <h5 class="mb-0">Created by</h5>
+        </div>
+        <div class="card-body box-profile">
+          <div class="text-center">
+            <img class="profile-user-img img-fluid img-circle" src="<%= item.createByAdmin.avatar %>">
+          </div>
+          <% if (currentAdminId.toString() === item.createByAdmin._id.toString()) { %>
+            <a href="/admin/profile">
+              <h3 class="profile-username text-center">
+                (ADMIN) <%= item.createByAdmin.firstName + ' ' + item.createByAdmin.lastName %>
+              </h3>
+            </a>
+            <% } else { %>
+            <a href="/admin/administrators/<%= item.createByAdmin._id %>">
+              <h3 class="profile-username text-center">
+                (ADMIN) <%= item.createByAdmin.firstName + ' ' + item.createByAdmin.lastName %>
+              </h3>
+            </a>
+            <% } %>
+
+        </div>
+      </div>
+      <% } else if (item.createByUser) { %>
+      <div class="card">
+        <div class="card-header text-center">
+          <h5 class="mb-0">Created by</h5>
+        </div>
+        <div class="card-body box-profile">
+          <div class="text-center">
+            <img class="profile-user-img img-fluid img-circle" src="<%= item.createByUser.avatar %>">
+          </div>
+          <a href="/admin/users/<%= item.createByUser._id %>">
+            <h3 class="profile-username text-center">
+              (USER) <%= item.createByUser.username %>
+            </h3>
+          </a>
+        </div>
+      </div>
+      <% } %>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group form-group-image">
+            <label>Image*</label>
+
+            <img class="img-fluid rounded picked__image--img" style="margin-bottom: 10px" src="<%= item.image || '' %>">
+
+            <div class="input-group">
+              <input type="text" class="form-control picked__image--label" value="<%= item.image || '' %>" disabled>
+
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-image" data-toggle="modal"
+                  data-target="#modal__images--management">
+                  Select image
+                </button>
+              </div>
+            </div>
+
+            <input type="hidden" name="image" class="picked__image--input" value="<%= item.image || '' %>" data-required="true">
+          </div>
+
+          <div class="form-group form-group-image">
+            <label>File 3D* (json)</label>
+            <input type="file" class="d-none file-input" src="<%= item.file3d || '' %>">
+
+            <div class="input-group input-file-group">
+              <input type="text" name="file3d" class="form-control value-file" id="file" readonly="" data-file-type="application/json" required value="<%= item.file3d || '' %>">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-file">
+                  <span class="button__text">Select file</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-image">
+            <label>Textures</label>
+
+            <div class="picked__images row">
+              <div class="col-md-12 preview-group mb-4 hide">
+                <img class="img-fluid rounded preview-img">
+                <p class="text-center">Preview Image</p>
+              </div>
+
+              <% item.textures.forEach((image) => { %>
+                <div class="col-md-4 picked__image--group">
+                  <a href="#" class="close"></a>
+                  <img src="<%= image.url %>" class="img-fluid rounded" style="margin-bottom: 15px;border: 1px solid #ccc;">
+                  <input type="hidden" name="texturesUrl" value="<%= image.url %>">
+                </div>
+              <% }) %>
+            </div>
+
+            <div class="input-group">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-image" data-input-name="texturesUrl" data-multiple="true"
+                        style="border-radius: 0.25rem"
+                        data-toggle="modal" data-target="#modal__images--management">
+                  Select images
+                </button>
+              </div>
+            </div>
+
+            <input type="hidden" class="picked__images--input" data-required="true">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="modal__images--management" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% include ../../partial/images_management %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" id="btn-save-change" data-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

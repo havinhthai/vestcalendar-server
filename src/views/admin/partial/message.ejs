@@ -1,0 +1,14 @@
+<%  for (let prop in flash_messages) {%>
+<div class="alert alert-<%= prop %>">
+  <button
+    type="button"
+    class="close"
+    data-dismiss="alert"
+    aria-hidden="true"
+  >&times;</button>
+
+  <!-- <h5><i class="icon fa fa-bullhorn"></i> <%= prop %>!</h5> -->
+
+  <%- flash_messages[prop].join('<br>') %>
+</div>
+<% } %>

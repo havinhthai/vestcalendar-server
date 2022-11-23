@@ -1,0 +1,52 @@
+  <% if (totalPage > 1) { %>
+  <%
+    delete query.page;
+    const queryPath = Object.keys(query).map(e => `${e}=${query[e]}`).join('&');
+    var slug = queryPath ? `?${queryPath}&` : '?';
+    currentPage = +currentPage;
+    const start = (currentPage > 3 ? currentPage - 2 : 1);
+    const end = totalPage > currentPage + 2 ? currentPage + 2 : totalPage;
+  %>
+
+  <ul class="pagination m-0 float-right">
+    <li class="page-item <% if (currentPage <= 1) { %> disabled<% } %>">
+      <a class="page-link" href="<%= slug %>page=1">&laquo;</a>
+    </li>
+
+    <% if (start > 1) { %>
+      <li class="page-item">
+        <a class="page-link">...</a>
+      </li>
+    <% }; %>
+
+    <% for(i = start; i <= end; i++) { %>
+      <li class="page-item <% if (i === currentPage) { %>disabled active<% } %>">
+        <a class="page-link" href="<%= slug %>page=<%= i %>"><%= i %></a>
+      </li>
+    <% }; %>
+
+    <% if (end < totalPage) { %>
+      <li class="page-item">
+        <a class="page-link">...</a>
+      </li>
+    <% }; %>
+
+    <li class="page-item <% if (currentPage >= totalPage) { %> disabled<% } %>">
+      <a class="page-link" href="<%= slug %>page=<%= totalPage %>">&raquo;</a>
+    </li>
+  </ul>
+<% } else { %>
+  <ul class="pagination m-0 float-right">
+    <li class="page-item disabled">
+      <a class="page-link" href="<%= slug %>page=1">&laquo;</a>
+    </li>
+
+    <li class="page-item disabled active">
+      <a class="page-link" href="<%= slug %>page=1">1</a>
+    </li>
+
+    <li class="page-item disabled">
+      <a class="page-link" href="<%= slug %>page=1">&raquo;</a>
+    </li>
+  </ul>
+<% } %>

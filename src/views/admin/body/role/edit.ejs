@@ -1,0 +1,127 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Edit Role') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Edit Role</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/admin/roles">Roles Management</a>
+            </li>
+            <li class="breadcrumb-item active">Edit Role</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<form method="POST" id="main_form">
+  <input type="hidden" name="_method" value="PUT">
+
+  <div class="row">
+    <div class="col-md-8 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Name*</label>
+            <input name="name" class="form-control slug-ref dynamic-disable"
+              value="<%= role.name %>"
+              <% if (role.deletedAt) { %>disabled<% } %>
+              placeholder="Enter name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control dynamic-disable"
+              <% if (role.deletedAt) { %>disabled<% } %>
+              placeholder="Enter description"><%= role.description %></textarea>
+          </div>
+
+          <div class="row">
+          <% permissionGroups.forEach(pg => { %>
+            <div class="form-group col-md-6">
+              <label>
+                <%= pg.groupName %>
+              </label>
+              <br>
+              <% pg.permissions.forEach(p => { %>
+              <div class="form-check
+                <% if (p.name.indexOf('_YOURSELF') !== -1) { %>checkboxShowNext<% } %>">
+                <input type="checkbox" name="permissions" class="form-check-input dynamic-disable"
+                  id="<%= p.name %>"
+                  value="<%= p.name %>"
+                  <% if (role.permissions.includes(p.name)) { %>checked<% } %>
+                  <% if (role.deletedAt) { %>disabled<% } %>
+                >
+                <label class="form-check-label" for="<%= p.name %>">
+                  <%= p.name %>
+                </label>
+              </div>
+              <% }); %>
+            </div>
+          <% }); %>
+          </div>
+        </div>
+
+        <div class="card-footer clearfix">
+          <button
+            class="btn btn-primary dynamic-disable"
+            <% if (role.deletedAt) { %>disabled<% } %>
+          >Submit</button>
+
+          <button
+            class="btn pull-right btn-req-delete
+              <% if (role.deletedAt) { %>btn-success<% } else { %>btn-danger<% } %>"
+            type="button" data-url="/admin/roles/<%= role._id %>"
+            data-type="role"
+            <% if (role.deletedAt) { %>data-is-deleted="true"<% } %>
+          ><% if (role.deletedAt) { %>Restore<% } else { %>Delete<% } %></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Created At:</label>
+
+                <input class="form-control" value="<%= formatDate(role.createdAt) %>" disabled>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Deleted At:</label>
+
+                <input id="txt-deleted-at" class="form-control"
+                  value="<% if (role.deletedAt) { %><%= formatDate(role.deletedAt) %><% } %>"
+                  disabled>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label>Total Administrators:</label>
+
+            <input class="form-control" value="<%= role.totalAdministrators %> administrator(s)" disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

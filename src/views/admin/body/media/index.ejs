@@ -1,0 +1,130 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Media Management') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Media Management</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Media Management</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css')%>
+
+<% script('https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js') -%>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <button class="btn btn-primary btn-write-post" id="btn-toggle-upload">
+          Upload file
+          <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+        </button>
+
+        <% if (query.q || query.category || query.tag) { %>
+        <h5 class="d-inline-block">
+          Found
+          <%= totalMedias %> result(s)
+          <small><a href="/admin/media">Back</a></small>
+        </h5>
+        <% } %>
+
+        <div class="card-tools">
+          <form>
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="q" class="form-control float-right" placeholder="Search" value="<%= query.q ? query.q : '' %>">
+
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fa fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <% if (!query.q && !query.category && !query.tag) { %>
+        <br>
+        <% } %>
+      </div>
+
+      <div class="card-body table-responsive p-0">
+        <form class="dropzone needsclick" id="upload" style="display: none">
+          <div class="dz-message needsclick">
+            Drop files here or click to upload.
+          </div>
+        </form>
+
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th class="text-center">Image</th>
+              <th>Name</th>
+              <th>Size</th>
+              <th class="text-center">MimeType</th>
+              <th class="text-center">Created At</th>
+            </tr>
+          </thead>
+
+          <tbody id="table-body">
+            <% media.forEach((m, i) => { %>
+            <tr>
+              <td class="text-center index-count">
+                <%= countPerPage(i, currentPage) %>
+              </td>
+              <td class="text-center">
+                <a href="/admin/media/<%= m._id %>">
+                  <img src="<%= m.location %>" class="img--manage__box">
+                </a>
+              </td>
+              <td>
+                <a href="/admin/media/<%= m._id %>">
+                  <%= m.name %>
+                </a>
+              </td>
+              <td>
+                <%= (m.size / 1024).toFixed(2) %> kB
+              </td>
+              <td class="text-center align-middle">
+                <a href="/admin/media?mimetype=0" class="badge badge-pill badge-secondary">
+                  <%= m.mimeType %>
+                </a>
+              </td>
+              <td class="text-center align-middle">
+                <%= formatDate(m.createdAt) %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-footer clearfix">
+        <% if (query.q || query.category || query.tag) { %>
+        <h5 class="float-left">
+          Found
+          <%= totalMedias %> result(s)
+          <small><a href="/admin/media">Back</a></small>
+        </h5>
+        <% } %>
+
+        <% include ../../partial/pagination %>
+      </div>
+    </div>
+  </div>
+</div>

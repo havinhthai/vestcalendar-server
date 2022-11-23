@@ -1,0 +1,116 @@
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <a href="/admin" class="brand-link">
+    <img src="/public/admin/img/logo1024.png" alt="Vesting Calendar Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-light">Vesting Calendar</span>
+  </a>
+
+  <div class="sidebar">
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="<%= currentAdmin.avatar %>" class="img-circle elevation-2" alt="User Image">
+      </div>
+      <div class="info">
+        <a href="/admin/profile" class="d-block"><%= currentAdmin.firstName + ' ' +  currentAdmin.lastName %></a>
+      </div>
+    </div>
+
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <% if (!denyRoutes.includes('/admin')) { %>
+        <li class="nav-item">
+          <a href="/admin" class="nav-link">
+            <i class="nav-icon fa fa-dashboard"></i>
+            <p>
+              Dashboard
+              <!-- <span class="right badge badge-danger">New</span> -->
+            </p>
+          </a>
+        </li>
+        <% } %>
+
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fa fa-user"></i>
+            <p>
+              Account
+              <i class="right fa fa-angle-left"></i>
+            </p>
+          </a>
+
+          <ul class="nav nav-treeview">
+            <% if (!denyRoutes.includes('/admin/administrators')) { %>
+            <li class="nav-item">
+              <a href="/admin/administrators" class="nav-link">
+                <i class="fa fa-circle-o nav-icon"></i>
+                <p>Administrator</p>
+              </a>
+            </li>
+            <% } %>
+
+            <% if (!denyRoutes.includes('/admin/users')) { %>
+            <li class="nav-item">
+              <a href="/admin/users" class="nav-link">
+                <i class="fa fa-circle-o nav-icon"></i>
+                <p>User</p>
+              </a>
+            </li>
+            <% } %>
+          </ul>
+        </li>
+
+
+        <% if (!denyRoutes.includes('/admin/categories')) { %>
+        <li class="nav-item">
+          <a href="/admin/categories" class="nav-link">
+            <i class="nav-icon fa fa-list-ul"></i>
+            <p>Category</p>
+          </a>
+        </li>
+        <% } %>
+
+        <% if (!denyRoutes.includes('/admin/projects')) { %>
+          <li class="nav-item">
+            <a href="/admin/projects" class="nav-link">
+              <i class="nav-icon fa fa-folder"></i>
+              <p>Project</p>
+            </a>
+          </li>
+          <% } %>
+
+        <% if (!denyRoutes.includes('/admin/media')) { %>
+        <li class="nav-item">
+          <a href="/admin/media" class="nav-link">
+            <i class="nav-icon fa fa-picture-o"></i>
+            <p>Media</p>
+          </a>
+        </li>
+        <% } %>
+
+        <% if (!denyRoutes.includes('/admin/roles')) { %>
+        <li class="nav-item">
+          <a href="/admin/roles" class="nav-link">
+            <i class="nav-icon fa fa-user-circle-o"></i>
+            <p>Role</p>
+          </a>
+        </li>
+        <% } %>
+        
+        <% if (!denyRoutes.includes('/admin/telegram')) { %>
+          <li class="nav-item">
+            <a href="/admin/telegram" class="nav-link">
+              <i class="nav-icon fa fa-telegram"></i>
+              <p>Telegram</p>
+            </a>
+          </li>
+        <% } %>
+
+        <li class="nav-item">
+          <a href="javascript:void(0)" class="nav-link btn-confirm-logout" data-href="/admin/profile/logout">
+            <i class="nav-icon fa fa-sign-out"></i>
+            <p>Sign out</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>

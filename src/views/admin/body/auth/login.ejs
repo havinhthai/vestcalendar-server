@@ -1,0 +1,30 @@
+<% layout('../../layout/accountBoilerplate') -%>
+
+<% block('title', 'Sign In') %>
+<% block('session-message', 'Sign in to start your session') %>
+
+<form method="post">
+  <div class="input-group mb-3">
+    <input type="email" class="form-control" placeholder="Enter your username" name="email" required autofocus>
+    <div class="input-group-append">
+      <span class="fa fa-envelope input-group-text"></span>
+    </div>
+  </div>
+  <div class="input-group mb-3">
+    <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
+    <div class="input-group-append">
+      <span class="fa fa-lock input-group-text"></span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8">
+      <p class="mb-1">
+        <a href="/admin/auth/password-reset">I forgot my password</a>
+      </p>
+    </div>
+
+    <div class="col-4">
+      <button class="btn btn-primary btn-block btn-flat">Sign In</button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,213 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Add item') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Add Item</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/admin/items">Items Management</a>
+            </li>
+            <li class="breadcrumb-item active">Add Item</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<% stylesheet('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css')%>
+
+<% script('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js') -%>
+
+<form method="POST" id="main_form" class="item-form">
+  <div class="row">
+    <div class="col-md-8 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Name*</label>
+            <input name="name" class="form-control slug-ref" placeholder="Enter item's name" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label class="lb-edit">Slug*</label>
+            <input name="slug" class="form-control mask-slug" placeholder="Enter item's slug" readonly required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Enter item's description"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category" class="form-control select2">
+              <option value="">--- Select category ---</option>
+              <% categories.forEach(category => { %>
+                <option value="<%= category._id %>">
+                  <%= category.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Asset Type</label>
+            <select name="assetType" class="form-control select2">
+              <option value="">--- Select asset type ---</option>
+              <% assetTypes.forEach(assetType => { %>
+                <option value="<%= assetType._id %>">
+                  <%= assetType.name %>
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Rarity</label>
+            <select name="rarity" class="form-control select2">
+              <option value="">--- Select rarity ---</option>
+              <% rarities.forEach(rarity => { %>
+                <option value="<%= rarity._id %>">
+                  <%= rarity.name %> (level <%= rarity.level %>)
+                </option>
+              <% }); %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="lb-edit">Attribute</label>
+            <input name="attribute" class="form-control" placeholder="Enter item's attribute">
+          </div>
+
+          <div class="form-group">
+            <label>Quantity</label>
+            <input name="quantity" type="number" min="0" value="0" class="form-control" placeholder="Enter item's quantity">
+          </div>
+
+          <div class="form-group">
+            <label>Price</label>
+            <input name="price" type="number" min="0" value="0" class="form-control" placeholder="Enter item's price">
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_PENDING %>">
+                <%= ITEM_STATUS.ITEM_STATUS_PENDING %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_APPROVE %>">
+                <%= ITEM_STATUS.ITEM_STATUS_APPROVE %>
+              </option>
+              <option value="<%= ITEM_STATUS.ITEM_STATUS_REJECT %>">
+                <%= ITEM_STATUS.ITEM_STATUS_REJECT %>
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Is on sale: </label>
+            <label class="switch">
+              <input type="checkbox" name="isOnSale" value="true">
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <div class="card-footer clearfix">
+            <button class="btn btn-primary">Save</button>
+          </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-4 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group form-group-image">
+            <label>Image*</label>
+
+            <img class="img-fluid rounded picked__image--img" style="margin-bottom: 10px">
+
+            <div class="input-group">
+              <input type="text" class="form-control picked__image--label" disabled>
+
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-image" data-toggle="modal"
+                  data-target="#modal__images--management">
+                  Select image
+                </button>
+              </div>
+            </div>
+
+            <input type="hidden" name="image" class="picked__image--input" data-required="true">
+          </div>
+
+          <div class="form-group form-group-image">
+            <label>File 3D* (json)</label>
+            <input type="file" class="d-none file-input">
+
+            <div class="input-group input-file-group">
+              <input type="text" name="file3d" class="form-control value-file" id="file" data-file-type="application/json" readonly="" required value="">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-file">
+                  <span class="button__text">Select file</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group form-group-image">
+            <label>Textures</label>
+
+            <div class="picked__images row">
+              <div class="col-md-12 preview-group mb-4 hide">
+                <img class="img-fluid rounded preview-img">
+                <p class="text-center">Preview Image</p>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-group-append">
+                <button type="button" class="btn btn-primary btn-select-image" data-input-name="texturesUrl" data-multiple="true"
+                        style="border-radius: 0.25rem"
+                        data-toggle="modal" data-target="#modal__images--management">
+                  Select images
+                </button>
+              </div>
+            </div>
+
+            <input type="hidden" class="picked__images--input" data-required="true">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="modal fade" id="modal__images--management" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select images</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <% include ../../partial/images_management %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="btn-save-change" data-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

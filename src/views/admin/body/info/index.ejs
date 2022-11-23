@@ -1,0 +1,112 @@
+<% layout('../../layout/mainBoilerplate') -%>
+
+<% block('title', 'Setting') %>
+
+<% block('titleBar', `
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Setting</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item">
+              <a href="/admin">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Setting</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+`) -%>
+
+<% script('https://cdn.ckeditor.com/4.11.2/standard/ckeditor.js') -%>
+
+<form method="POST" id="main_form">
+  <input type="hidden" name="_method" value="PUT">
+  <input type="hidden" name="id" value="<%= info._id %>">
+
+  <div class="row">
+    <div class="col-md-8 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <h3>Website's Info</h3>
+
+          <div class="form-group">
+            <label>Name*</label>
+            <input name="name" class="form-control"
+              value="<%= info.name %>"
+              placeholder="Enter name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description*</label>
+            <textarea name="description" class="form-control"
+              placeholder="Enter description" required><%= info.description %></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Copyright*</label>
+            <input name="copyright"
+              class="form-control" value="<%= info.copyright %>"
+              placeholder="Enter copyright" required>
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label>Intro</label>
+            <textarea name="intro" id="editor" class="form-control"
+              placeholder="Enter author's intro"><%= info.intro %></textarea>
+          </div>
+        </div>
+
+        <div class="card-footer clearfix">
+          <button class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-xs-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="form-group">
+            <label>Release At</label>
+
+            <input class="form-control disabled" disabled value="<%= formatDate(info.createdAt) %>">
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label>Facebook App ID</label>
+
+            <input name="facebookAppId" class="form-control"
+              value="<%= info.facebookAppId %>"
+              placeholder="Enter Facebook App ID">
+          </div>
+
+          <div class="form-group">
+            <label>Facebook Page ID</label>
+
+            <input name="facebookPageId" class="form-control"
+              value="<%= info.facebookPageId %>"
+              placeholder="Enter Facebook Page ID">
+          </div>
+
+          <hr>
+
+          <div class="form-group">
+            <label>Google ID</label>
+
+            <input name="googleId" class="form-control"
+              value="<%= info.googleId %>"
+              placeholder="Enter Google ID">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
